@@ -32,4 +32,8 @@ const (
 	BANG     = "!"
 	LT       = "<"
 	GT       = ">"
+
+	// Logical Operators
+	EQ     = "=="
+	NOT_EQ = "!="
 )
