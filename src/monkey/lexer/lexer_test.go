@@ -183,6 +183,29 @@ func TestNextTokenLogicalOperators(t *testing.T) {
 	}
 }
 
+func TestNextTokenIntegers(t *testing.T) {
+	input := "0 10 100"
+	tests := []struct {
+		expectedType    token.TokenType
+		expectedLiteral string
+	}{
+		{token.INT, "0"},
+		{token.INT, "10"},
+		{token.INT, "100"},
+	}
+
+	l := New(input)
+	for i, test := range tests {
+		tok := l.NextToken()
+		if tok.Type != test.expectedType {
+			t.Errorf("tests[%d] - type wrong. expected=%q, got=%q\n", i, test.expectedType, tok.Type)
+		}
+		if tok.Literal != test.expectedLiteral {
+			t.Errorf("tests[%d] - literal wrong. expected=%q, got=%q\n", i, test.expectedLiteral, tok.Literal)
+		}
+	}
+}
+
 func TestNextTokenOperators(t *testing.T) {
 	input := `=+-*/!<>`
 	tests := []struct {

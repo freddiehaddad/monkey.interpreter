@@ -64,6 +64,22 @@ func (l *Lexer) readIdentifier() string {
 	return l.input[position:l.position]
 }
 
+// Checks if ch is an integer character returning true if ch meets the criteria.
+// False otherwise.
+func isDigit(ch byte) bool {
+	return '0' <= ch && ch <= '9'
+}
+
+// Returns the sequence of characters matching the `isDigit` criteria.
+func (l *Lexer) readInteger() string {
+	position := l.position
+	for isDigit(l.ch) {
+		l.readChar()
+	}
+
+	return l.input[position:l.position]
+}
+
 // Returns the next token in the input.
 func (l *Lexer) NextToken() token.Token {
 	var tok token.Token
@@ -119,6 +135,9 @@ func (l *Lexer) NextToken() token.Token {
 		if isLetter(l.ch) {
 			tok.Literal = l.readIdentifier()
 			tok.Type = token.LookupIdentifier(tok.Literal)
+		} else if isDigit(l.ch) {
+			tok.Literal = l.readInteger()
+			tok.Type = token.INT
 		} else {
 			tok = newToken(token.ILLEGAL, l.ch)
 		}

@@ -32,6 +32,7 @@ const (
 	EOF     = "EOF"
 
 	IDENT = "IDENT"
+	INT   = "INT"
 
 	// Delimiters
 	COMMA     = ","
