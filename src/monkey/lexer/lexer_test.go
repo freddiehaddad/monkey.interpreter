@@ -89,6 +89,75 @@ func TestNextTokenWhitespace(t *testing.T) {
 	}
 }
 
+func TestNextTokenKeywords(t *testing.T) {
+	input := "let fn return if else true false"
+
+	tests := []struct {
+		expectedType    token.TokenType
+		expectedLiteral string
+	}{
+		{token.LET, "let"},
+		{token.FUNCTION, "fn"},
+		{token.RETURN, "return"},
+		{token.IF, "if"},
+		{token.ELSE, "else"},
+		{token.TRUE, "true"},
+		{token.FALSE, "false"},
+		{token.EOF, "EOF"},
+	}
+
+	l := New(input)
+	for i, test := range tests {
+		tok := l.NextToken()
+		if tok.Type != test.expectedType {
+			t.Errorf("tests[%d] - type wrong. expected=%q, got=%q\n", i, test.expectedType, tok.Type)
+		}
+		if tok.Literal != test.expectedLiteral {
+			t.Errorf("tests[%d] - literal wrong. expected=%q, got=%q\n", i, test.expectedLiteral, tok.Literal)
+		}
+	}
+}
+
+func TestNextTokenIdentifiers(t *testing.T) {
+	input := `lets let fns fn returns return ifs if elses else
+	          trues true falses false _abc ab_c abc_`
+
+	tests := []struct {
+		expectedType    token.TokenType
+		expectedLiteral string
+	}{
+		{token.IDENT, "lets"},
+		{token.LET, "let"},
+		{token.IDENT, "fns"},
+		{token.FUNCTION, "fn"},
+		{token.IDENT, "returns"},
+		{token.RETURN, "return"},
+		{token.IDENT, "ifs"},
+		{token.IF, "if"},
+		{token.IDENT, "elses"},
+		{token.ELSE, "else"},
+		{token.IDENT, "trues"},
+		{token.TRUE, "true"},
+		{token.IDENT, "falses"},
+		{token.FALSE, "false"},
+		{token.IDENT, "_abc"},
+		{token.IDENT, "ab_c"},
+		{token.IDENT, "abc_"},
+		{token.EOF, "EOF"},
+	}
+
+	l := New(input)
+	for i, test := range tests {
+		tok := l.NextToken()
+		if tok.Type != test.expectedType {
+			t.Errorf("tests[%d] - type wrong. expected=%q, got=%q\n", i, test.expectedType, tok.Type)
+		}
+		if tok.Literal != test.expectedLiteral {
+			t.Errorf("tests[%d] - literal wrong. expected=%q, got=%q\n", i, test.expectedLiteral, tok.Literal)
+		}
+	}
+}
+
 func TestNextTokenLogicalOperators(t *testing.T) {
 	input := `=!===!`
 	tests := []struct {

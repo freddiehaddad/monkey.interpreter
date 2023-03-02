@@ -48,6 +48,22 @@ func (l *Lexer) consumeWhitespace() {
 	}
 }
 
+// Checks if ch is an alpha character or the underscore returning true if ch meets
+// the criteria.  False otherwise.
+func isLetter(ch byte) bool {
+	return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_'
+}
+
+// Returns the sequence of characters matching the `isLetter` criteria.
+func (l *Lexer) readIdentifier() string {
+	position := l.position
+	for isLetter(l.ch) {
+		l.readChar()
+	}
+
+	return l.input[position:l.position]
+}
+
 // Returns the next token in the input.
 func (l *Lexer) NextToken() token.Token {
 	var tok token.Token
@@ -100,7 +116,12 @@ func (l *Lexer) NextToken() token.Token {
 	case 0:
 		tok = newEofToken()
 	default:
-		tok = newToken(token.ILLEGAL, l.ch)
+		if isLetter(l.ch) {
+			tok.Literal = l.readIdentifier()
+			tok.Type = token.LookupIdentifier(tok.Literal)
+		} else {
+			tok = newToken(token.ILLEGAL, l.ch)
+		}
 	}
 
 	l.readChar()
