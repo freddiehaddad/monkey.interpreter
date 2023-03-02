@@ -62,6 +62,35 @@ func TestReadChar(t *testing.T) {
 	}
 }
 
+func TestNextTokenOperators(t *testing.T) {
+	input := `=+-*/!<>`
+	tests := []struct {
+		expectedType    token.TokenType
+		expectedLiteral string
+	}{
+		{token.ASSIGN, "="},
+		{token.PLUS, "+"},
+		{token.MINUS, "-"},
+		{token.ASTERISK, "*"},
+		{token.SLASH, "/"},
+		{token.BANG, "!"},
+		{token.LT, "<"},
+		{token.GT, ">"},
+		{token.EOF, "EOF"},
+	}
+
+	l := New(input)
+	for i, test := range tests {
+		tok := l.NextToken()
+		if tok.Type != test.expectedType {
+			t.Errorf("tests[%d] - type wrong. expected=%q, got=%q\n", i, test.expectedType, tok.Type)
+		}
+		if tok.Literal != test.expectedLiteral {
+			t.Errorf("tests[%d] - literal wrong. expected=%q, got=%q\n", i, test.expectedLiteral, tok.Literal)
+		}
+	}
+}
+
 func TestNextTokenTerminals(t *testing.T) {
 	input := `(){},;#`
 	tests := []struct {

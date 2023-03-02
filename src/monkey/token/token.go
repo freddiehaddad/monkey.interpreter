@@ -24,6 +24,12 @@ const (
 	RBRACE = "}"
 
 	// Operators
-	ASSIGN = "="
-	PLUS   = "+"
+	ASSIGN   = "="
+	PLUS     = "+"
+	MINUS    = "-"
+	ASTERISK = "*"
+	SLASH    = "/"
+	BANG     = "!"
+	LT       = "<"
+	GT       = ">"
 )
