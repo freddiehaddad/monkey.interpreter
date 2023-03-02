@@ -62,6 +62,33 @@ func TestReadChar(t *testing.T) {
 	}
 }
 
+func TestNextTokenWhitespace(t *testing.T) {
+	input := ",\n;\t==\r! !="
+
+	tests := []struct {
+		expectedType    token.TokenType
+		expectedLiteral string
+	}{
+		{token.COMMA, ","},
+		{token.SEMICOLON, ";"},
+		{token.EQ, "=="},
+		{token.BANG, "!"},
+		{token.NOT_EQ, "!="},
+		{token.EOF, "EOF"},
+	}
+
+	l := New(input)
+	for i, test := range tests {
+		tok := l.NextToken()
+		if tok.Type != test.expectedType {
+			t.Errorf("tests[%d] - type wrong. expected=%q, got=%q\n", i, test.expectedType, tok.Type)
+		}
+		if tok.Literal != test.expectedLiteral {
+			t.Errorf("tests[%d] - literal wrong. expected=%q, got=%q\n", i, test.expectedLiteral, tok.Literal)
+		}
+	}
+}
+
 func TestNextTokenLogicalOperators(t *testing.T) {
 	input := `=!===!`
 	tests := []struct {

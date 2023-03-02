@@ -40,9 +40,19 @@ func (l *Lexer) peekChar() byte {
 	}
 }
 
+// Advances lexer position past all sequential whitespace characters stopping when
+// reaching a non-whitespace character or the end of file.
+func (l *Lexer) consumeWhitespace() {
+	for l.ch == ' ' || l.ch == '\t' || l.ch == '\r' || l.ch == '\n' {
+		l.readChar()
+	}
+}
+
 // Returns the next token in the input.
 func (l *Lexer) NextToken() token.Token {
 	var tok token.Token
+
+	l.consumeWhitespace()
 
 	switch l.ch {
 	case ',':
