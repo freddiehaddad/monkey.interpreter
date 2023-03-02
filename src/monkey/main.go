@@ -4,6 +4,8 @@ package main
 import (
 	"fmt"
 	"log"
+	"monkey/repl"
+	"os"
 	"os/user"
 )
 
@@ -19,5 +21,9 @@ func main() {
 		log.Fatalf("Failed to get username: %s", err)
 	}
 	fmt.Printf("Hello %s! Welcome to the Monkey Interpreter.\n", user.Username)
-	fmt.Println("This project is still in development and the REPL is not ready yet :(")
+	fmt.Println("Press Ctrl+D to exit")
+
+	repl.Start(os.Stdin, os.Stdout)
+
+	fmt.Println("Goodbye", user.Username)
 }
