@@ -43,10 +43,39 @@ func TestLetStatement(t *testing.T) {
 	}
 }
 
+func TestReturnStatements(t *testing.T) {
+	input := `
+	return 5;
+	return 10;
+	return 12345;
+	`
+
+	l := lexer.New(input)
+	p := New(l)
+
+	program := p.ParseProgram()
+	checkParserErrors(t, p)
+
+	if len(program.Statements) != 3 {
+		t.Fatalf("program.Statements does nto contain 3 statements. got=%d\n", len(program.Statements))
+	}
+
+	for _, stmt := range program.Statements {
+		if reflect.TypeOf(stmt).String() != "*ast.ReturnStatement" {
+			t.Errorf("stmt not *ast.ReturnStatement. got=%T\n", stmt)
+			continue
+		}
+
+		if stmt.TokenLiteral() != "return" {
+			t.Errorf("returnStmt.TokenLiteral not 'return', got %q", stmt.TokenLiteral())
+		}
+	}
+}
+
 func TestLetStatementErrors(t *testing.T) {
 	input := `
 	let x 5;
-	let = 10;
+	let 10;
 	let 838383;
 	`
 

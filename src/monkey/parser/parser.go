@@ -101,7 +101,7 @@ func (p *Parser) parseStatement() ast.Statement {
 // The expected form is:
 //
 //	let IDENTIFIER = EXPRESSION;
-func (p *Parser) parseLetStatement() ast.Statement {
+func (p *Parser) parseLetStatement() *ast.LetStatement {
 	stmt := &ast.LetStatement{Token: p.curToken}
 
 	if !p.expectPeek(token.IDENT) {
