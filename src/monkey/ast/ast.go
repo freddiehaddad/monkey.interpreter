@@ -29,6 +29,14 @@ func (p *Program) TokenLiteral() string {
 	}
 }
 
+type ReturnStatement struct {
+	Token       token.Token // the token.RETURN token
+	ReturnValue Expression
+}
+
+func (r *ReturnStatement) statementNode()       {}
+func (r *ReturnStatement) TokenLiteral() string { return r.Token.Literal }
+
 type LetStatement struct {
 	Token token.Token // the token.LET token
 	Name  *Identifier

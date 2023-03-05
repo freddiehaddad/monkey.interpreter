@@ -91,6 +91,8 @@ func (p *Parser) parseStatement() ast.Statement {
 	switch p.curToken.Type {
 	case token.LET:
 		return p.parseLetStatement()
+	case token.RETURN:
+		return p.parseReturnStatement()
 	default:
 		log.Printf("Support for %q not implemented\n", p.curToken.Type)
 		return nil
@@ -115,6 +117,24 @@ func (p *Parser) parseLetStatement() *ast.LetStatement {
 		log.Printf("Expected next token to be of type=%q, got=%q\n", token.ASSIGN, p.peekToken.Type)
 		return nil
 	}
+
+	// TODO: We're skipping the expressions until we encounter a semicolon
+	for !p.curTokenIs(token.SEMICOLON) {
+		log.Printf("Intentionally skipping all tokens up to the SEMICOLON\n")
+		p.nextToken()
+	}
+
+	return stmt
+}
+
+// Implementation for the `return` statement definition.
+// The expected form is:
+//
+//	return EXPRESSION;
+func (p *Parser) parseReturnStatement() *ast.ReturnStatement {
+	stmt := &ast.ReturnStatement{Token: p.curToken}
+
+	p.nextToken()
 
 	// TODO: We're skipping the expressions until we encounter a semicolon
 	for !p.curTokenIs(token.SEMICOLON) {

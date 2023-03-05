@@ -4,6 +4,7 @@ package parser
 import (
 	"monkey/ast"
 	"monkey/lexer"
+	"reflect"
 	"testing"
 )
 
