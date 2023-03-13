@@ -4,10 +4,11 @@ package parser
 import (
 	"fmt"
 	"log"
-	"monkey/ast"
-	"monkey/lexer"
-	"monkey/token"
 	"strconv"
+
+	"github.com/freddiehaddad/monkey.interpreter/pkg/ast"
+	"github.com/freddiehaddad/monkey.interpreter/pkg/lexer"
+	"github.com/freddiehaddad/monkey.interpreter/pkg/token"
 )
 
 type Parser struct {
