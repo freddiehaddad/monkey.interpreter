@@ -10,26 +10,14 @@ one are the following:
     - More emphasis on test-driven development
     - Extending the language capabilities
 
-## Building the project
+## Building the Project
 
-In a slight divergence from the idiomatic package organization used in Go, this
-project's packages are contained within this repository. Therefore, the `GOPATH`
-environment variable must be set to the directory where this repo was cloned.
+The project can be built locally via:
 
-Even better is to leverage the included `.envrc` file by installing `direnv`.
+    go build -v ./...
 
-## Configuring `direnv`
+## Running the Unit Tests
 
-The instructions for installing and using `direnv` are provided for Arch Linux.
-Other GNU/Linux distributions will follow a similar pattern:
+The project unit tests can be executed via:
 
-### Installation
-
-    sudo pacman -S direnv
-
-### Shell Configuration (zsh)
-
-    echo 'eval "$(direnv hook zsh)"' >> ~/.zshrc
-
-NOTE: The first time you enter the directory, you maybe prompted to allow
-`direnv` to run.
+    go test -v ./...
