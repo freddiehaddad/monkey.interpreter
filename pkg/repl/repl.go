@@ -5,8 +5,9 @@ import (
 	"bufio"
 	"fmt"
 	"io"
-	"monkey/lexer"
-	"monkey/token"
+
+	"github.com/freddiehaddad/monkey.interpreter/pkg/lexer"
+	"github.com/freddiehaddad/monkey.interpreter/pkg/token"
 )
 
 const PROMPT = ">> "

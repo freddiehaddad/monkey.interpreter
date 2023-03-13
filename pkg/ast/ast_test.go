@@ -2,8 +2,9 @@
 package ast
 
 import (
-	"monkey/token"
 	"testing"
+
+	"github.com/freddiehaddad/monkey.interpreter/pkg/token"
 )
 
 func TestString(t *testing.T) {

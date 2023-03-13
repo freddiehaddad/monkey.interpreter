@@ -4,9 +4,10 @@ package main
 import (
 	"fmt"
 	"log"
-	"monkey/repl"
 	"os"
 	"os/user"
+
+	"github.com/freddiehaddad/monkey.interpreter/pkg/repl"
 )
 
 func init() {
