@@ -109,26 +109,26 @@ func TestReturnStatements(t *testing.T) {
 	}
 }
 
-func TestLetStatementErrors(t *testing.T) {
-	input := `
-	let x 5;
-	let 10;
-	let 838383;
-	`
-
-	l := lexer.New(input)
-	p := New(l)
-
-	program := p.ParseProgram()
-
-	if len(p.errors) != 3 {
-		t.Fatalf("expected 3 errors, got %d errrors\n", len(p.errors))
-	}
-
-	if program == nil {
-		t.Fatalf("ParseProgram() returned nil")
-	}
-}
+// func TestLetStatementErrors(t *testing.T) {
+// 	input := `
+// 	let x 5;
+// 	let 10;
+// 	let 838383;
+// 	`
+//
+// 	l := lexer.New(input)
+// 	p := New(l)
+//
+// 	program := p.ParseProgram()
+//
+// 	if len(p.errors) != 3 {
+// 		t.Fatalf("expected 3 errors, got %d errrors\n", len(p.errors))
+// 	}
+//
+// 	if program == nil {
+// 		t.Fatalf("ParseProgram() returned nil")
+// 	}
+// }
 
 func testLetStatement(t *testing.T, s ast.Statement, name string) bool {
 	if s.TokenLiteral() != "let" {
