@@ -51,6 +51,27 @@ var precendences = map[token.TokenType]int{
 	token.ASTERISK: PRODUCT,
 }
 
+var indentCount int = -1
+
+func printTabs() {
+	for i := 0; i < indentCount; i++ {
+		fmt.Print("\t")
+	}
+}
+
+func trace(fn string) string {
+	indentCount++
+	printTabs()
+	fmt.Printf("BEGIN %s\n", fn)
+	return fn
+}
+
+func untrace(fn string) {
+	printTabs()
+	fmt.Printf("END %s\n", fn)
+	indentCount--
+}
+
 func New(l *lexer.Lexer) *Parser {
 	p := &Parser{
 		l:      l,
@@ -151,6 +172,7 @@ func (p *Parser) expectPeek(t token.TokenType) bool {
 // Looks at the current token's type and attempts to process the next series of
 // tokens according to the grammar for statement definition.
 func (p *Parser) parseStatement() ast.Statement {
+	// defer untrace(trace("parseStatement"))
 	switch p.curToken.Type {
 	case token.LET:
 		return p.parseLetStatement()
@@ -166,6 +188,7 @@ func (p *Parser) parseStatement() ast.Statement {
 //
 //	let IDENTIFIER = EXPRESSION;
 func (p *Parser) parseLetStatement() *ast.LetStatement {
+	// defer untrace(trace("parseStatement"))
 	stmt := &ast.LetStatement{Token: p.curToken}
 
 	if !p.expectPeek(token.IDENT) {
@@ -182,7 +205,7 @@ func (p *Parser) parseLetStatement() *ast.LetStatement {
 
 	// TODO: We're skipping the expressions until we encounter a semicolon
 	for !p.curTokenIs(token.SEMICOLON) {
-		log.Printf("Intentionally skipping all tokens up to the SEMICOLON\n")
+		// log.Printf("Intentionally skipping all tokens up to the SEMICOLON\n")
 		p.nextToken()
 	}
 
@@ -194,13 +217,14 @@ func (p *Parser) parseLetStatement() *ast.LetStatement {
 //
 //	return EXPRESSION;
 func (p *Parser) parseReturnStatement() *ast.ReturnStatement {
+	// defer untrace(trace("parseReturnStatement"))
 	stmt := &ast.ReturnStatement{Token: p.curToken}
 
 	p.nextToken()
 
 	// TODO: We're skipping the expressions until we encounter a semicolon
 	for !p.curTokenIs(token.SEMICOLON) {
-		log.Printf("Intentionally skipping all tokens up to the SEMICOLON\n")
+		// log.Printf("Intentionally skipping all tokens up to the SEMICOLON\n")
 		p.nextToken()
 	}
 
@@ -209,6 +233,7 @@ func (p *Parser) parseReturnStatement() *ast.ReturnStatement {
 
 // Implementation for the 'expression` statement definition.
 func (p *Parser) parseExpressionStatement() *ast.ExpressionStatement {
+	// defer untrace(trace("parseExpressionStatement"))
 	stmt := &ast.ExpressionStatement{Token: p.curToken}
 
 	stmt.Expression = p.parseExpression(LOWEST)
@@ -226,6 +251,7 @@ func (p *Parser) noPrefixParseFnError(t token.TokenType) {
 }
 
 func (p *Parser) parseExpression(precendence int) ast.Expression {
+	// defer untrace(trace("parseExpression"))
 	prefix := p.prefixParseFns[p.curToken.Type]
 	if prefix == nil {
 		p.noPrefixParseFnError(p.curToken.Type)
@@ -248,10 +274,12 @@ func (p *Parser) parseExpression(precendence int) ast.Expression {
 }
 
 func (p *Parser) parseIdentifier() ast.Expression {
+	// defer untrace(trace("parseIdentifier"))
 	return &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
 }
 
 func (p *Parser) parseIntegerLiteral() ast.Expression {
+	// defer untrace(trace("parseIntegerLiteral"))
 	literal := &ast.IntegerLiteral{Token: p.curToken}
 
 	value, err := strconv.ParseInt(p.curToken.Literal, 0, 64)
@@ -266,6 +294,7 @@ func (p *Parser) parseIntegerLiteral() ast.Expression {
 }
 
 func (p *Parser) parseInfixExpression(left ast.Expression) ast.Expression {
+	// defer untrace(trace("parseInfixExpression"))
 	expression := &ast.InfixExpression{
 		Token:    p.curToken,
 		Operator: p.curToken.Literal,
@@ -280,6 +309,7 @@ func (p *Parser) parseInfixExpression(left ast.Expression) ast.Expression {
 }
 
 func (p *Parser) parsePrefixExpression() ast.Expression {
+	// defer untrace(trace("parsePrefixExpression"))
 	expression := &ast.PrefixExpression{
 		Token:    p.curToken,
 		Operator: p.curToken.Literal,
