@@ -205,7 +205,7 @@ func (p *Parser) parseLetStatement() *ast.LetStatement {
 
 	// TODO: We're skipping the expressions until we encounter a semicolon
 	for !p.curTokenIs(token.SEMICOLON) {
-		log.Printf("Intentionally skipping all tokens up to the SEMICOLON\n")
+		// log.Printf("Intentionally skipping all tokens up to the SEMICOLON\n")
 		p.nextToken()
 	}
 
@@ -224,7 +224,7 @@ func (p *Parser) parseReturnStatement() *ast.ReturnStatement {
 
 	// TODO: We're skipping the expressions until we encounter a semicolon
 	for !p.curTokenIs(token.SEMICOLON) {
-		log.Printf("Intentionally skipping all tokens up to the SEMICOLON\n")
+		// log.Printf("Intentionally skipping all tokens up to the SEMICOLON\n")
 		p.nextToken()
 	}
 
