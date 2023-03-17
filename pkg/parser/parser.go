@@ -3,7 +3,6 @@ package parser
 
 import (
 	"fmt"
-	"log"
 	"strconv"
 
 	"github.com/freddiehaddad/monkey.interpreter/pkg/ast"
@@ -199,14 +198,12 @@ func (p *Parser) parseLetStatement() *ast.LetStatement {
 	stmt := &ast.LetStatement{Token: p.curToken}
 
 	if !p.expectPeek(token.IDENT) {
-		log.Printf("Expected next token to be of type=%q, got=%q\n", token.IDENT, p.peekToken.Type)
 		return nil
 	}
 
 	stmt.Name = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
 
 	if !p.expectPeek(token.ASSIGN) {
-		log.Printf("Expected next token to be of type=%q, got=%q\n", token.ASSIGN, p.peekToken.Type)
 		return nil
 	}
 

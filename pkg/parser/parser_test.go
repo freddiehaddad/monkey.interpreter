@@ -153,6 +153,7 @@ func TestLetStatement(t *testing.T) {
 	}{
 		{"let x = 5;", "x", 5},
 		{"let foobar = y;", "foobar", "y"},
+		{"let y = true;", "y", true},
 	}
 
 	for _, tt := range tests {
@@ -184,6 +185,7 @@ func TestReturnStatements(t *testing.T) {
 	}{
 		{"return 5;", 5},
 		{"return foobar;", "foobar"},
+		{"return true;", true},
 	}
 
 	for _, tt := range tests {
