@@ -1,19 +1,34 @@
 // Monkey language lexer
 package lexer
 
-import "github.com/freddiehaddad/monkey.interpreter/pkg/token"
+import (
+	"github.com/freddiehaddad/monkey.interpreter/pkg/token"
+)
 
 type Lexer struct {
 	input        string
 	position     int  // current position in input (points to current char)
 	readPosition int  // current reading position in input (after current char)
 	ch           byte // current char under examination
+	tokens       chan token.Token
 }
 
 // New creates a new Lexer. The input variable specifies the data to be processed.
 func New(input string) *Lexer {
-	lexer := Lexer{input: input}
+	lexer := Lexer{
+		input:  input,
+		tokens: make(chan token.Token, 10),
+	}
 	lexer.readChar()
+
+	go func(lexer *Lexer) {
+		defer close(lexer.tokens)
+		for t := lexer.nextToken(); t.Type != token.EOF; t = lexer.nextToken() {
+			lexer.tokens <- t
+		}
+		lexer.tokens <- newEofToken()
+	}(&lexer)
+
 	return &lexer
 }
 
@@ -82,6 +97,15 @@ func (l *Lexer) readInteger() string {
 
 // Returns the next token in the input.
 func (l *Lexer) NextToken() token.Token {
+	t, ok := <-l.tokens
+	if !ok {
+		return newEofToken()
+	}
+	return t
+}
+
+// Returns the next token in the input.
+func (l *Lexer) nextToken() token.Token {
 	var tok token.Token
 
 	l.consumeWhitespace()
