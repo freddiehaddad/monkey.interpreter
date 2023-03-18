@@ -12,16 +12,25 @@ func TestNewLexer(t *testing.T) {
 		input string
 		lexer Lexer
 	}{
-		{"", Lexer{"", 0, 1, 0}},
-		{" ", Lexer{" ", 0, 1, ' '}},
-		{"a", Lexer{"a", 0, 1, 'a'}},
-		{"ab", Lexer{"ab", 0, 1, 'a'}},
+		{"", Lexer{"", 0, 1, 0, nil}},
+		{" ", Lexer{" ", 0, 1, ' ', nil}},
+		{"a", Lexer{"a", 0, 1, 'a', nil}},
+		{"ab", Lexer{"ab", 0, 1, 'a', nil}},
 	}
 
 	for i, test := range tests {
 		l := *New(test.input)
-		if test.lexer != l {
-			t.Errorf("tests[%d] failed, expected=%+v, got=%+v\n", i, test.lexer, l)
+		if test.lexer.input != l.input {
+			t.Errorf("tests[%d] failed, expected input=%s, got=%s\n", i, test.lexer.input, l.input)
+		}
+		if test.lexer.position != l.position {
+			t.Errorf("tests[%d] failed, expected position=%d, got=%d\n", i, test.lexer.position, l.position)
+		}
+		if test.lexer.readPosition != l.readPosition {
+			t.Errorf("tests[%d] failed, expected input=%d, got=%d\n", i, test.lexer.readPosition, l.readPosition)
+		}
+		if test.lexer.ch != l.ch {
+			t.Errorf("tests[%d] failed, expected input=%c, got=%c\n", i, test.lexer.ch, l.ch)
 		}
 	}
 }
