@@ -12,6 +12,7 @@ type Object interface {
 
 const (
 	NULL_OBJ    = "NULL"
+	BOOLEAN_OBJ = "BOOLEAN"
 	INTEGER_OBJ = "INTEGER"
 )
 
@@ -20,6 +21,14 @@ type Null struct{}
 
 func (n *Null) Inspect() string  { return "null" }
 func (n *Null) Type() ObjectType { return NULL_OBJ }
+
+// Booleans
+type Boolean struct {
+	Value bool
+}
+
+func (b *Boolean) Inspect() string  { return fmt.Sprintf("%t", b.Value) }
+func (b *Boolean) Type() ObjectType { return BOOLEAN_OBJ }
 
 // Integers
 type Integer struct {
