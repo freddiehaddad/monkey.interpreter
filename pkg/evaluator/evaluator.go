@@ -93,6 +93,10 @@ func evalIntegerInfixExpression(operator string, left object.Object, right objec
 		return &object.Integer{Value: lValue + rValue}
 	case "-":
 		return &object.Integer{Value: lValue - rValue}
+	case "*":
+		return &object.Integer{Value: lValue * rValue}
+	case "/":
+		return &object.Integer{Value: lValue / rValue}
 	default:
 		return NULL
 	}
