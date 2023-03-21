@@ -63,9 +63,9 @@ func evalPrefixExpression(operator string, right object.Object) object.Object {
 }
 
 func evalInfixExpression(operator string, left object.Object, right object.Object) object.Object {
-	switch operator {
-	case "+":
-		return evalPlusOperatorExpression(left, right)
+	switch {
+	case left.Type() == object.INTEGER_OBJ && right.Type() == object.INTEGER_OBJ:
+		return evalIntegerInfixExpression(operator, left, right)
 	default:
 		return NULL
 	}
@@ -84,6 +84,21 @@ func evalBangOperatorExpression(right object.Object) object.Object {
 	}
 }
 
+func evalIntegerInfixExpression(operator string, left object.Object, right object.Object) object.Object {
+	lValue := left.(*object.Integer).Value
+	rValue := right.(*object.Integer).Value
+
+	switch operator {
+	case "+":
+		return &object.Integer{Value: lValue + rValue}
+	case "-":
+		return &object.Integer{Value: lValue - rValue}
+	default:
+		return NULL
+	}
+
+}
+
 func evalPlusOperatorExpression(left object.Object, right object.Object) object.Object {
 	if left.Type() != object.INTEGER_OBJ || right.Type() != object.INTEGER_OBJ {
 		return NULL
@@ -93,6 +108,17 @@ func evalPlusOperatorExpression(left object.Object, right object.Object) object.
 	rValue := right.(*object.Integer).Value
 
 	return &object.Integer{Value: lValue + rValue}
+}
+
+func evalMinusOperatorExpression(left object.Object, right object.Object) object.Object {
+	if left.Type() != object.INTEGER_OBJ || right.Type() != object.INTEGER_OBJ {
+		return NULL
+	}
+
+	lValue := left.(*object.Integer).Value
+	rValue := right.(*object.Integer).Value
+
+	return &object.Integer{Value: lValue - rValue}
 }
 
 func evalMinusPrefixOperatorExpression(right object.Object) object.Object {
