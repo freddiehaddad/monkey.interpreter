@@ -9,6 +9,32 @@ import (
 	"github.com/freddiehaddad/monkey.interpreter/pkg/parser"
 )
 
+func TestReturnStatement(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected int64
+	}{
+		{"return 10;", 10},
+		{"return 10; 9;", 10},
+		{"return 2 * 5; 9;", 10},
+		{"9; return 2 * 5; 9;", 10},
+		{
+			`if (10 > 1) {
+				if (9 > 2) {
+					return 15;
+				}
+				return 1;
+			}`,
+			15,
+		},
+	}
+
+	for _, tt := range tests {
+		evaluated := testEval(tt.input)
+		testIntegerObject(t, evaluated, tt.expected)
+	}
+}
+
 func TestIfEseExpressions(t *testing.T) {
 	tests := []struct {
 		input    string
