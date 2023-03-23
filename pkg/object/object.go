@@ -11,11 +11,20 @@ type Object interface {
 }
 
 const (
+	ERROR_OBJ        = "ERROR"
 	NULL_OBJ         = "NULL"
 	BOOLEAN_OBJ      = "BOOLEAN"
 	INTEGER_OBJ      = "INTEGER"
 	RETURN_VALUE_OBJ = "RETURN_VALUE"
 )
+
+// Errors
+type Error struct {
+	Message string
+}
+
+func (e *Error) Type() ObjectType { return ERROR_OBJ }
+func (e *Error) Inspect() string  { return "ERROR: " + e.Message }
 
 // Null
 type Null struct{}
