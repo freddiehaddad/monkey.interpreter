@@ -89,7 +89,7 @@ func TestReturnStatement(t *testing.T) {
 	}
 }
 
-func TestIfEseExpressions(t *testing.T) {
+func TestIfElseExpressions(t *testing.T) {
 	tests := []struct {
 		input    string
 		expected interface{}
