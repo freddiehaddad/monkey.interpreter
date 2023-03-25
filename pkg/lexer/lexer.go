@@ -79,6 +79,16 @@ func (l *Lexer) readIdentifier() string {
 	return l.input[position:l.position]
 }
 
+// Returns the sequence of characters up to the next ".
+func (l *Lexer) readString() string {
+	position := l.position
+	for l.ch != '"' && l.ch != 0 {
+		l.readChar()
+	}
+
+	return l.input[position:l.position]
+}
+
 // Checks if ch is an integer character returning true if ch meets the criteria.
 // False otherwise.
 func isDigit(ch byte) bool {
@@ -153,6 +163,15 @@ func (l *Lexer) nextToken() token.Token {
 		tok = newToken(token.LT, l.ch)
 	case '>':
 		tok = newToken(token.GT, l.ch)
+	case '"':
+		l.readChar()
+		literal := l.readString()
+		if l.ch == '"' {
+			l.readChar()
+			tok = token.Token{Type: token.STRING, Literal: literal}
+		} else {
+			tok = newToken(token.ILLEGAL, l.ch)
+		}
 	case 0:
 		tok = newEofToken()
 	default:

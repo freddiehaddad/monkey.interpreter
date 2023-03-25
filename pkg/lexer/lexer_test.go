@@ -96,6 +96,9 @@ func TestNextToken(t *testing.T) {
 	if result == 15 {
 		return result;
 	}
+
+	"foobar"
+	"foo bar"
 	`
 
 	tests := []struct {
@@ -171,6 +174,8 @@ func TestNextToken(t *testing.T) {
 		{token.IDENT, "result"},
 		{token.SEMICOLON, ";"},
 		{token.RBRACE, "}"},
+		{token.STRING, "foobar"},
+		{token.STRING, "foo bar"},
 		{token.EOF, "EOF"},
 	}
 
