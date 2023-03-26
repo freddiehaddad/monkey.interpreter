@@ -211,6 +211,8 @@ func TestEvalBooleanExpression(t *testing.T) {
 		{"(1 < 2) == false", false},
 		{"(1 > 2) == true", false},
 		{"(1 > 2) == false", true},
+		{`"foo" == "foo"`, true},
+		{`"foo" == "bar"`, false},
 	}
 
 	for _, tt := range tests {
@@ -261,6 +263,35 @@ func TestEvalIntegerExpression(t *testing.T) {
 	}
 }
 
+func TestEvalStringLiteralExpression(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected string
+	}{
+		{`"foobar"`, "foobar"},
+	}
+
+	for _, tt := range tests {
+		evaluated := testEval(tt.input)
+		testStringLiteralObject(t, evaluated, tt.expected)
+	}
+}
+
+func TestStringConcatenation(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected string
+	}{
+		{`"foo" + "bar"`, "foobar"},
+		{`"foo" + "bar" + "baz"`, "foobarbaz"},
+	}
+
+	for _, tt := range tests {
+		evaluated := testEval(tt.input)
+		testStringLiteralObject(t, evaluated, tt.expected)
+	}
+}
+
 func testEval(input string) object.Object {
 	l := lexer.New(input)
 	p := parser.New(l)
@@ -302,6 +333,21 @@ func testIntegerObject(t *testing.T, obj object.Object, expected int64) bool {
 
 	if result.Value != expected {
 		t.Errorf("object has wrong value. got=%d, expected=%d", result.Value, expected)
+		return false
+	}
+
+	return true
+}
+
+func testStringLiteralObject(t *testing.T, obj object.Object, expected string) bool {
+	result, ok := obj.(*object.String)
+	if !ok {
+		t.Errorf("object is not String. got=%T (%+v)", obj, obj)
+		return false
+	}
+
+	if result.Value != expected {
+		t.Errorf("object has wrong value. got=%s, expected=%s", result.Value, expected)
 		return false
 	}
 
