@@ -40,10 +40,12 @@ const (
 	SEMICOLON = ";"
 
 	// Groupings
-	LPAREN = "("
-	RPAREN = ")"
-	LBRACE = "{"
-	RBRACE = "}"
+	LPAREN   = "("
+	RPAREN   = ")"
+	LBRACE   = "{"
+	RBRACE   = "}"
+	LBRACKET = "["
+	RBRACKET = "]"
 
 	// Operators
 	ASSIGN   = "="
