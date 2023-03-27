@@ -167,7 +167,6 @@ func (l *Lexer) nextToken() token.Token {
 		l.readChar()
 		literal := l.readString()
 		if l.ch == '"' {
-			l.readChar()
 			tok = token.Token{Type: token.STRING, Literal: literal}
 		} else {
 			tok = newToken(token.ILLEGAL, l.ch)
