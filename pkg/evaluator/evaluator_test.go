@@ -447,6 +447,53 @@ func TestLastBuiltinFunction(t *testing.T) {
 	}
 }
 
+func TestRestBuiltinFunction(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected interface{}
+	}{
+		{`rest("")`, "argument to `rest` must be ARRAY, got STRING"},
+		{`rest(3)`, "argument to `rest` must be ARRAY, got INTEGER"},
+		{`rest([])`, &object.Null{}},
+		{`rest(["1"])`, &object.Array{Elements: []object.Object{}}},
+		{`rest([1,2])`, &object.Array{Elements: []object.Object{&object.Integer{Value: 2}}}},
+		{`rest(["a"])`, &object.Array{Elements: []object.Object{}}},
+		{`rest(["a", "b"])`, &object.Array{Elements: []object.Object{&object.String{Value: "b"}}}},
+	}
+
+	for _, tt := range tests {
+		evaluated := testEval(tt.input)
+
+		switch expected := tt.expected.(type) {
+		case *object.Array:
+			evalArr, ok := evaluated.(*object.Array)
+			if !ok {
+				t.Errorf("object is not Array. got=%T (%+v)", evaluated, evaluated)
+			}
+			expArr := tt.expected.(*object.Array)
+			if len(evalArr.Elements) != len(expArr.Elements) {
+				t.Errorf("length of array wrong. expected=%d, got=%d", len(expArr.Elements), len(evalArr.Elements))
+			}
+			if evalArr.Inspect() != expArr.Inspect() {
+				t.Errorf("expected array wrong. expected=%q, got=%q", expArr.Inspect(), evalArr.Inspect())
+			}
+		case *object.Null:
+			if _, ok := evaluated.(*object.Null); !ok {
+				t.Errorf("object is not Null. got=%T (%+v)", evaluated, evaluated)
+			}
+		case string:
+			errObj, ok := evaluated.(*object.Error)
+			if !ok {
+				t.Errorf("object is not Error. got=%T (%+v)", evaluated, evaluated)
+				continue
+			}
+			if errObj.Message != expected {
+				t.Errorf("wrong error message. expected=%q, got=%q", expected, errObj.Message)
+			}
+		}
+	}
+}
+
 func TestStringConcatenation(t *testing.T) {
 	tests := []struct {
 		input    string
