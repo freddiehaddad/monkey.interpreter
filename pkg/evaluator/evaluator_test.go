@@ -354,7 +354,7 @@ func TestEvalStringLiteralExpression(t *testing.T) {
 	}
 }
 
-func TestBuiltinFunctions(t *testing.T) {
+func TestLenBuiltinFunction(t *testing.T) {
 	tests := []struct {
 		input    string
 		expected interface{}
@@ -366,8 +366,66 @@ func TestBuiltinFunctions(t *testing.T) {
 		{`len("one", "two")`, "wrong number of arguments. got=2, want=1"},
 		{`len([])`, 0},
 		{`len([1])`, 1},
+	}
+
+	for _, tt := range tests {
+		evaluated := testEval(tt.input)
+
+		switch expected := tt.expected.(type) {
+		case int:
+			testIntegerObject(t, evaluated, int64(expected))
+		case string:
+			errObj, ok := evaluated.(*object.Error)
+			if !ok {
+				t.Errorf("object is not Error. got=%T (%+v)", evaluated, evaluated)
+				continue
+			}
+			if errObj.Message != expected {
+				t.Errorf("wrong error message. expected=%q, got=%q", expected, errObj.Message)
+			}
+		}
+	}
+}
+
+func TestFirstBuiltinFunction(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected interface{}
+	}{
+		{`first("")`, "argument to `first` must be ARRAY, got STRING"},
+		{`first(3)`, "argument to `first` must be ARRAY, got INTEGER"},
 		{`first([1])`, 1},
+		{`first([1, 2])`, 1},
+	}
+
+	for _, tt := range tests {
+		evaluated := testEval(tt.input)
+
+		switch expected := tt.expected.(type) {
+		case int:
+			testIntegerObject(t, evaluated, int64(expected))
+		case string:
+			errObj, ok := evaluated.(*object.Error)
+			if !ok {
+				t.Errorf("object is not Error. got=%T (%+v)", evaluated, evaluated)
+				continue
+			}
+			if errObj.Message != expected {
+				t.Errorf("wrong error message. expected=%q, got=%q", expected, errObj.Message)
+			}
+		}
+	}
+}
+
+func TestLastBuiltinFunction(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected interface{}
+	}{
+		{`last("")`, "argument to `last` must be ARRAY, got STRING"},
+		{`last(3)`, "argument to `last` must be ARRAY, got INTEGER"},
 		{`last([1])`, 1},
+		{`last([1, 2])`, 2},
 	}
 
 	for _, tt := range tests {
