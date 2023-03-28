@@ -447,6 +447,56 @@ func TestLastBuiltinFunction(t *testing.T) {
 	}
 }
 
+func TestPushBuiltinFunction(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected interface{}
+	}{
+		{`push([])`, "wrong number of arguments. got=1, want=2"},
+		{`push(a, 1)`, "identifier not found: a"},
+		{`push([], 1, 2)`, "wrong number of arguments. got=3, want=2"},
+		{`push([], 1)`, &object.Array{Elements: []object.Object{&object.Integer{Value: 1}}}},
+		{`push([1], 2)`, &object.Array{Elements: []object.Object{
+			&object.Integer{Value: 1},
+			&object.Integer{Value: 2},
+		}}},
+	}
+
+	for _, tt := range tests {
+		evaluated := testEval(tt.input)
+
+		switch expected := tt.expected.(type) {
+		case *object.Array:
+			evalArr, ok := evaluated.(*object.Array)
+			if !ok {
+				t.Errorf("object is not Array. got=%T (%+v)", evaluated, evaluated)
+			}
+			expArr := tt.expected.(*object.Array)
+			if len(evalArr.Elements) != len(expArr.Elements) {
+				t.Errorf("length of array wrong. expected=%d, got=%d", len(expArr.Elements), len(evalArr.Elements))
+			}
+			if evalArr.Inspect() != expArr.Inspect() {
+				t.Errorf("expected array wrong. expected=%q, got=%q", expArr.Inspect(), evalArr.Inspect())
+			}
+		case *object.Null:
+			if _, ok := evaluated.(*object.Null); !ok {
+				t.Errorf("object is not Null. got=%T (%+v)", evaluated, evaluated)
+			}
+		case string:
+			errObj, ok := evaluated.(*object.Error)
+			if !ok {
+				t.Errorf("object is not Error. got=%T (%+v)", evaluated, evaluated)
+				continue
+			}
+			if errObj.Message != expected {
+				t.Errorf("wrong error message. expected=%q, got=%q", expected, errObj.Message)
+			}
+		default:
+			t.Errorf("unexpected type returned. got=%T (%+v)", evaluated, evaluated)
+		}
+	}
+}
+
 func TestRestBuiltinFunction(t *testing.T) {
 	tests := []struct {
 		input    string
