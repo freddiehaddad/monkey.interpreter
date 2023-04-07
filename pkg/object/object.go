@@ -7,6 +7,7 @@ import (
 	"hash/fnv"
 	"strings"
 
+	"github.com/freddiehaddad/monkey.compiler/pkg/code"
 	"github.com/freddiehaddad/monkey.interpreter/pkg/ast"
 )
 
@@ -18,16 +19,17 @@ type Object interface {
 }
 
 const (
-	ERROR_OBJ        = "ERROR"
-	NULL_OBJ         = "NULL"
-	BOOLEAN_OBJ      = "BOOLEAN"
-	INTEGER_OBJ      = "INTEGER"
-	RETURN_VALUE_OBJ = "RETURN_VALUE"
-	FUNCTION_OBJ     = "FUNCTION"
-	STRING_OBJ       = "STRING"
-	BUILTIN_OBJ      = "BUILTIN"
-	ARRAY_OBJ        = "ARRAY"
-	HASH_OBJ         = "HASH"
+	ERROR_OBJ             = "ERROR"
+	NULL_OBJ              = "NULL"
+	BOOLEAN_OBJ           = "BOOLEAN"
+	INTEGER_OBJ           = "INTEGER"
+	RETURN_VALUE_OBJ      = "RETURN_VALUE"
+	FUNCTION_OBJ          = "FUNCTION"
+	STRING_OBJ            = "STRING"
+	BUILTIN_OBJ           = "BUILTIN"
+	ARRAY_OBJ             = "ARRAY"
+	HASH_OBJ              = "HASH"
+	COMPILED_FUNCTION_OBJ = "COMPILED_FUNCTION_OBJ"
 )
 
 // Errors
@@ -187,3 +189,13 @@ type Builtin struct {
 
 func (b *Builtin) Type() ObjectType { return BUILTIN_OBJ }
 func (b *Builtin) Inspect() string  { return "builtin function" }
+
+// Compiled function object
+type CompiledFunction struct {
+	Instructions code.Instructions
+}
+
+func (cf *CompiledFunction) Type() ObjectType { return COMPILED_FUNCTION_OBJ }
+func (cf *CompiledFunction) Inspect() string {
+	return fmt.Sprintf("CompiledFunction[%p]", cf)
+}
